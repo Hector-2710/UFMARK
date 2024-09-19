@@ -1,0 +1,1 @@
+en esta rama se desarrollara el primer avance hasta lograr las bases del programa como lo pueden ser el menu, validadores de opciones y un arreglo que simulara una base de datos con los correos de los estudiantes
