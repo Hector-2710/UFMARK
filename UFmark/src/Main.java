@@ -1,25 +1,16 @@
-
 import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
-        setUp();
+        run();
     }
-
-    public static void setUp() {
-
-        String[] users = {"caja", "myha", "joaquin03"};
-        String[] passwords = {"caja", "hola", "faundez_ufromail"};
-
+    public static void run(){
+        String[] usuarios = cargarUsuarios();
+        String[] contraseñas = cargarContraseñas();
         Scanner scanner = new Scanner(System.in);
-
-        run(users, passwords, scanner);
-
+        login( usuarios, contraseñas, scanner);
         scanner.close();
     }
-
-    public static void run(String[] users, String[] passwords, Scanner scanner) {
-
+    public static void login(String [] correos, String[] contraseñas,Scanner scanner){
         System.out.println("Ingrese su nombre de usuario:");
         String user = scanner.nextLine();
 
@@ -28,7 +19,7 @@ public class Main {
             Si no encuentra al usuario en la lista de usuarios,
             se finaliza el proceso con << return >>.
         */
-        if (!validateUser(users, user)) {
+        if (!validateUser(correos, user)) {
             System.out.println("Usuario" + user + " no encontrado");
             return;
         }
@@ -38,7 +29,7 @@ public class Main {
        /*
             Si se valida el usuario, se obtiene el de la lista de usuarios.
         */
-        int index = getIndex(users, user);
+        int index = getIndex(correos, user);
 
         System.out.println("Ingrese su contraseña:");
         String password = scanner.nextLine();
@@ -48,7 +39,7 @@ public class Main {
             con la contraseña en la lista de contraseñas, se finaliza
             el proceso conn << return >>.
         */
-        if (!validateCredentials(passwords, index, password)) {
+        if (!validateCredentials(contraseñas, index, password)) {
             System.out.println("Contraseña incorrecta para el usuario " + user);
             return;
         }
@@ -61,12 +52,76 @@ public class Main {
         */
         System.out.println("Bienvenido " + user);
 
-        // llamamos al menu //
+    }
+    public static void menuPrincipal() {
+        System.out.println("Bienvenido!");
+        System.out.println("Elige una opcion!");
+        System.out.println("1. realizar pedido");
+        System.out.println("2. verificar pedido");
+        System.out.println("3. cancelar pedido");
+        System.out.println("4. Salir");
+    }
 
-        menu(scanner);
-        int opcion = seleccionarOpcionMenu();
+    public static int pedirOpcion() {
+        Scanner scanner = new Scanner(System.in);
+        int opcion = scanner.nextInt();
+        return opcion;
+    }
 
+    public static boolean validarOpcion(int opcion) {
+        boolean estado = false;
+        if (opcion >= 1 && opcion <= 4) {
+            estado = true;
+        }
+        return estado;
+    }
 
+    public static String[] cargarUsuarios() {
+        String[] correosEstudiantes = {"j.perez01@ufromail.cl",
+                "m.gonzalez02@ufromail.cl",
+                "c.fernandez03@ufromail.cl",
+                "s.munoz04@ufromail.cl",
+                "j.rodriguez05@ufromail.cl",
+                "c.martinez06@ufromail.cl",
+                " p.lopez07@ufromail.cl",
+                "f.diaz08@ufromail.cl",
+                "i.morales09@ufromail.cl",
+                "p.soto10@ufromail.cl",
+                "r.torres11@ufromail.cl",
+                "a.gutierrez12@ufromail.cl",
+                "f.vargas13@ufromail.cl",
+                "c.silva14@ufromail.cl",
+                "n.contreras15@ufromail.cl",
+                "v.espinoza16@ufromail.cl",
+                "f.sandoval17@ufromail.cl",
+                "n.ramirez18@ufromail.cl",
+                "a.vega19@ufromail.cl",
+                "v.arias20@ufromail.cl",
+                "c.bustos21@ufromail.cl",
+                "p.fuentes22@ufromail.cl",
+                "e.rivas23@ufromail.cl",
+                "c.araya24@ufromail.cl",
+                "s.castro25@ufromail.cl",
+                "a.miranda26@ufromail.cl",
+                "f.reyes27@ufromail.cl",
+                "t.vera28@ufromail.cl",
+                "e.salas29@ufromail.cl",
+                "l.palacios30@ufromail.cl"};
+        return correosEstudiantes;
+    }
+
+    public static String[] cargarContraseñas(){
+        String[] listaContraseñas = {"/)7Mn#cGP:", "gx5]=A]QHj", "DM-qVwV\\G.", "c+UzO`O<`u", "3(958:zg~3", "`ou6'*$4]r",
+                "It?1<P)E/z", "\\B\"GfAAmJ'", "]ctdg,7>}d", "RS$%azgFa0", "MSdpmO]t$4", ":uj+MtVGnC",
+                "CjrZf2Cocz", "*QhPwP#KwJ", "/!=+vy77:>", "zRV6anhC>Y", "t3./Zw3T]>", ".L~pSvs$?#",
+                "4,2a\"Q=x<>", "X:nuW|qQ'w", "FIU>]|f2ZM", "V)jWn;I@Bh", "T=:_@3pA<|", "Iq.O:E6J#^",
+                "tgEdwfY@.E", "Eg9IiQqVB`", "@jA\"'NxK?D", "cbgnSaK9V<", "1!+b:4Q4M;", "ZO!g!9N2Wl"};
+        return listaContraseñas;
+    }
+    public static String pedirDatos(){
+        Scanner scanner = new Scanner(System.in);
+        String usuario = scanner.nextLine();
+        return usuario;
     }
 
     public static boolean validateUser(String[] usersArr, String user) {
@@ -87,7 +142,6 @@ public class Main {
 
         return false;
     }
-
     public static int getIndex(String[] arr, String value) {
 
         /*
@@ -114,7 +168,6 @@ public class Main {
 
         return index;
     }
-
     public static boolean validateCredentials(String[] passwordsArr, int index, String password) {
 
         /*
@@ -129,95 +182,5 @@ public class Main {
 
         return false;
     }
-
-    public static void menu(Scanner scanner) {
-
-        /* Mostrando el menu con las opciones disponible */
-
-        int opcion = 0;
-        do {
-            System.out.println("-----menu-----");
-            System.out.println("1.- menu barato");
-            System.out.println("2.- menu intermedio");
-            System.out.println("3.- menu caro");
-            System.out.println("4.- salir");
-            System.out.println("selecciona una opcion:");
-            opcion = seleccionarOpcionMenu();
-
-            if (validarOpcion(opcion)) {
-
-                /* Si la opcion se valida continua ejecutando la opcion del menu llamada
-                en caso de no ser validada continuara con el menu*/
-
-                ejecutarOpcion(opcion);
-            }
-        } while ( opcion != 4);
-    }
-
-    public static int seleccionarOpcionMenu() {
-
-        // Lee un valor entero ingresado por el usuario //
-
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextInt();
-    }
-
-    public static boolean validarOpcion(int opcion) {
-
-        /* Valida que la opcion ingresada sea alguna de las que permite
-        el menu y retorna un boleano dependiendo de la validacion */
-
-        if (0 < opcion && opcion < 5) {
-            return true;
-        } else {
-            System.out.println("opcion no valida");
-            return false;
-        }
-    }
-
-    public static void ejecutarOpcion(int opcion){
-
-        /* Recibe la opcion en caso de ya ser validada y ejecuta para
-        cada opcion solicitada un desplege del menu */
-
-        switch (opcion){
-            case 1:
-                menuBarato();
-                 break;
-            case 2:
-                menuIntermedio();
-                break;
-            case 3:
-                menuCaro();
-                break;
-            case 4:
-                System.out.println("saliendo del menuu");
-                break;
-        default:
-                System.out.println("Opción no válida.");
-        }
-    }
-
-    public static void menuBarato() {
-        System.out.println("Plato principal : porotos");
-        System.out.println("Postre : banana");
-        System.out.println("Bebestible : agua");
-
-    }
-
-    public static void menuIntermedio() {
-        System.out.println("Plato principal : arroz con pollo");
-        System.out.println("Postre : chocolate");
-        System.out.println("Bebestible : bebida");
-    }
-
-    public static void menuCaro() {
-        System.out.println("Plato principal : piza");
-        System.out.println("Postre : pie de limon");
-        System.out.println("Bebestible : cafe");
-    }
-
-
-
-
 }
+
