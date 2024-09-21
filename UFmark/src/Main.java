@@ -1,223 +1,257 @@
-
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        setUp();
+        run();
     }
 
-    public static void setUp() {
-
-        String[] users = {"caja", "myha", "joaquin03"};
-        String[] passwords = {"caja", "hola", "faundez_ufromail"};
-
+    public static void run() {
+        String[] usuarios = cargarCorreos();
+        String[] contraseñas = cargarContraseñas();
         Scanner scanner = new Scanner(System.in);
 
-        run(users, passwords, scanner);
+        // cargamos los correos y contraseñas
 
+        boolean usuarioValido = login(usuarios, contraseñas, scanner);
+
+        if (usuarioValido == true) {
+            menuPrincipal();
+            int opcion = pedirOpcion();
+            boolean validador = validarOpcion(opcion);
+
+            // Si el usuario es valido llamamos al menu, pedimos y validamos su opcion
+
+            if (validador == true) {
+                ejecutarMenu(opcion);
+            }
+        }
         scanner.close();
     }
 
-    public static void run(String[] users, String[] passwords, Scanner scanner) {
+    public static boolean login(String[] correos, String[] contraseñas, Scanner scanner) {
+        //Cargamos lista de correos, lista de contraseñas y scanner
 
-        System.out.println("Ingrese su nombre de usuario:");
-        String user = scanner.nextLine();
+        System.out.println("Ingrese su correo:");
+        String correoUser = scanner.nextLine();
 
+        if (!validarUsuario(correos, correoUser)) {
+            System.out.println("Usuario" + correoUser + " no encontrado");
+            return false;
 
-        /*
-            Si no encuentra al usuario en la lista de usuarios,
-            se finaliza el proceso con << return >>.
-        */
-        if (!validateUser(users, user)) {
-            System.out.println("Usuario" + user + " no encontrado");
-            return;
+            // Si validateUser retorna <false> significa que el correoUser no se encontro en la lista de correos
         }
 
         System.out.println("Usuario encontrado\n");
 
-       /*
-            Si se valida el usuario, se obtiene el de la lista de usuarios.
-        */
-        int index = getIndex(users, user);
+        int index = getIndex(correos, correoUser);
 
         System.out.println("Ingrese su contraseña:");
-        String password = scanner.nextLine();
+        String contraseñaUser = scanner.nextLine();
 
-        /*
-            Si el indice del usuario en la lista de usuario no coincide
-            con la contraseña en la lista de contraseñas, se finaliza
-            el proceso conn << return >>.
-        */
-        if (!validateCredentials(passwords, index, password)) {
-            System.out.println("Contraseña incorrecta para el usuario " + user);
-            return;
+        if (!validarContraseña(contraseñas, index, contraseñaUser)) {
+            System.out.println("Contraseña incorrecta para el usuario " + correoUser);
+            return false;
+
+            // Si validateUser retorna <false> significa que el la contraseñaUser no coincide con la de la lista
         }
 
         System.out.println("Contraseña correcta\n");
-
-
-        /*
-            Si el usuario y la contraseña coinciden, se imprime un mensaje de bienvenida.
-        */
-        System.out.println("Bienvenido " + user);
-
-        // llamamos al menu //
-
-        menu(scanner);
-        int opcion = seleccionarOpcionMenu();
-
-
+        System.out.println("Bienvenido " + correoUser);
+        return true;
     }
 
-    public static boolean validateUser(String[] usersArr, String user) {
+    public static boolean validarContraseña(String[] contraseñas, int index, String contraseñaUser) {
+        if (contraseñas[index].equals(contraseñaUser)) {
+            return true;
+        }
+        return false;
 
-        /*
-            Se recorre la lista de usuarios, si el usuario
-            se encuentra en la lista, se retorna << true >>
-            y en caso contrario, se retorna << false >>.
+        /* Si la contraseña ingresada por el usuario coincide con la guardada en la lista de
+         contraseñas ( en el mismo index) retorna <true>, en caso contrario retorna <false> */
+    }
 
-            << String u >> Corresponde a la variable que
-            recorre la lista de usuarios.
-        */
-        for (String u : usersArr) {
-            if (u.equals(user)) {
+    public static boolean validarUsuario(String[] correos, String correoUsuario) {
+        //Cargamos lista de correos y un correo del usuario.
+
+        for (String i : correos) {
+            if (i.equals(correoUsuario)) {
                 return true;
             }
         }
-
         return false;
+
+        /*Recorremos una lista de correos , si el correo ingresado por el usuario coincide con alguno de
+        la lista retorna <true>, si no coincide retorna <false> */
     }
 
-    public static int getIndex(String[] arr, String value) {
+    public static int getIndex(String[] correos, String correoUser) {
 
-        /*
-            << index >> se inicializa en -1, porque una
-            posicion en una array es siempre >= 0
-        */
         int index = -1;
 
-
-        /*
-            Se recorre la lista de usuarios, si el usuario ingresado
-            coindice con alguno en la lista, se retorna el indice de
-            dicho usuario en la lista.
-
-            << int i >> Corresponde a la variable que
-            recorre la lista de usuarios.
-        */
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i].equals(value)) {
+        for (int i = 0; i < correos.length; i++) {
+            if (correos[i].equals(correoUser)) {
                 index = i;
                 break;
             }
         }
-
         return index;
+
+        // Si correoUser se encuentra en la lista de correos retorna el indice en cual se encuentra
     }
 
-    public static boolean validateCredentials(String[] passwordsArr, int index, String password) {
-
-        /*
-            Se valida si la contraseña ingresada coincide con la
-            contraseña que esta en el mismo indice del usuario,
-            si coinciden, se retorna << true >>,
-            en caso contrario, se retorna << false >>.
-        */
-        if (passwordsArr[index].equals(password)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static void menu(Scanner scanner) {
-
-        /* Mostrando el menu con las opciones disponible */
-
-        int opcion = 0;
-        do {
-            System.out.println("-----menu-----");
-            System.out.println("1.- menu barato");
-            System.out.println("2.- menu intermedio");
-            System.out.println("3.- menu caro");
-            System.out.println("4.- salir");
-            System.out.println("selecciona una opcion:");
-            opcion = seleccionarOpcionMenu();
-
-            if (validarOpcion(opcion)) {
-
-                /* Si la opcion se valida continua ejecutando la opcion del menu llamada
-                en caso de no ser validada continuara con el menu*/
-
-                ejecutarOpcion(opcion);
-            }
-        } while ( opcion != 4);
-    }
-
-    public static int seleccionarOpcionMenu() {
-
-        // Lee un valor entero ingresado por el usuario //
-
+    public static int pedirOpcion() {
         Scanner scanner = new Scanner(System.in);
-        return scanner.nextInt();
+        int opcion = scanner.nextInt();
+        return opcion;
+
+        // Retorna un entero
     }
 
     public static boolean validarOpcion(int opcion) {
-
-        /* Valida que la opcion ingresada sea alguna de las que permite
-        el menu y retorna un boleano dependiendo de la validacion */
-
-        if (0 < opcion && opcion < 5) {
-            return true;
-        } else {
-            System.out.println("opcion no valida");
-            return false;
+        boolean estado = false;
+        if (opcion >= 1 && opcion <= 4) {
+            estado = true;
         }
+        return estado;
+
+        // Si la opcion se encuentra en el menu retorna <true> en caso contrario retorna <false>
     }
 
-    public static void ejecutarOpcion(int opcion){
-
-        /* Recibe la opcion en caso de ya ser validada y ejecuta para
-        cada opcion solicitada un desplege del menu */
-
-        switch (opcion){
+    public static void ejecutarMenu(int opcion) {
+        switch (opcion) {
             case 1:
-                menuBarato();
-                 break;
+                if (opcion == 1) {
+                    mostrarPlatos();
+                    int opcionPlatos = pedirOpcion();
+                    if (validarOpcion(opcionPlatos) == true) {
+                        seleccionarPlato(opcionPlatos);
+                        break;
+                    }
+                }
             case 2:
-                menuIntermedio();
-                break;
+                if (opcion == 2) {
+                    System.out.println("aun no implementado");
+                    break;
+                }
             case 3:
-                menuCaro();
-                break;
+                if (opcion == 3) {
+                    System.out.println("aun no implementado");
+                    break;
+                }
             case 4:
-                System.out.println("saliendo del menuu");
-                break;
-        default:
-                System.out.println("Opción no válida.");
+                if (opcion == 4) {
+                    break;
+                }
         }
     }
 
-    public static void menuBarato() {
+    public static void seleccionarPlato(int opcionPlato) {
+        switch (opcionPlato) {
+            case 1: {
+                if (opcionPlato == 1) {
+                    platoBarato();
+                    break;
+                }
+            }
+            case 2: {
+                if (opcionPlato == 2) {
+                    platoIntermedio();
+                    break;
+                }
+            }
+            case 3: {
+                if (opcionPlato == 3) {
+                    platoCaro();
+                    break;
+                }
+            }
+            case 4: {
+                if (opcionPlato == 4) {
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void menuPrincipal() {
+
+        System.out.println("Bienvenido!");
+        System.out.println("Elige una opcion!");
+        System.out.println("1. realizar pedido");
+        System.out.println("2. verificar pedido");
+        System.out.println("3. cancelar pedido");
+        System.out.println("4. Salir");
+    }
+
+    public static void mostrarPlatos() {
+        System.out.println("-----menu-----");
+        System.out.println("1.- menu barato");
+        System.out.println("2.- menu intermedio");
+        System.out.println("3.- menu caro");
+        System.out.println("4.- salir");
+        System.out.println("selecciona una opcion:");
+    }
+
+    public static void platoBarato() {
         System.out.println("Plato principal : porotos");
         System.out.println("Postre : banana");
         System.out.println("Bebestible : agua");
-
     }
 
-    public static void menuIntermedio() {
+    public static void platoIntermedio() {
         System.out.println("Plato principal : arroz con pollo");
         System.out.println("Postre : chocolate");
         System.out.println("Bebestible : bebida");
     }
 
-    public static void menuCaro() {
+    public static void platoCaro() {
         System.out.println("Plato principal : piza");
         System.out.println("Postre : pie de limon");
         System.out.println("Bebestible : cafe");
     }
 
+    public static String[] cargarCorreos() {
+        String[] correosEstudiantes = {"j.perez01@ufromail.cl",
+                "m.gonzalez02@ufromail.cl",
+                "c.fernandez03@ufromail.cl",
+                "s.munoz04@ufromail.cl",
+                "j.rodriguez05@ufromail.cl",
+                "c.martinez06@ufromail.cl",
+                " p.lopez07@ufromail.cl",
+                "f.diaz08@ufromail.cl",
+                "i.morales09@ufromail.cl",
+                "p.soto10@ufromail.cl",
+                "r.torres11@ufromail.cl",
+                "a.gutierrez12@ufromail.cl",
+                "f.vargas13@ufromail.cl",
+                "c.silva14@ufromail.cl",
+                "n.contreras15@ufromail.cl",
+                "v.espinoza16@ufromail.cl",
+                "f.sandoval17@ufromail.cl",
+                "n.ramirez18@ufromail.cl",
+                "a.vega19@ufromail.cl",
+                "v.arias20@ufromail.cl",
+                "c.bustos21@ufromail.cl",
+                "p.fuentes22@ufromail.cl",
+                "e.rivas23@ufromail.cl",
+                "c.araya24@ufromail.cl",
+                "s.castro25@ufromail.cl",
+                "a.miranda26@ufromail.cl",
+                "f.reyes27@ufromail.cl",
+                "t.vera28@ufromail.cl",
+                "e.salas29@ufromail.cl",
+                "l.palacios30@ufromail.cl"};
+        return correosEstudiantes;
+    }
 
-
-
+    public static String[] cargarContraseñas() {
+        String[] listaContraseñas = {
+                "pass1234", "qwerty56", "abcde789", "user2023", "letmein88",
+                "welcome1", "secret123", "helloWorld7", "javaRocks9", "password99",
+                "test12345", "secureCode8", "samplePass4", "myPassword1", "userPass02",
+                "simple2024", "data123", "code4567", "randomUser3", "example88",
+                "qwertyuiop1", "abcdef123", "login2023", "openSesame4", "admin567"
+        };
+        return listaContraseñas;
+    }
 }
