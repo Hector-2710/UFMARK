@@ -2,11 +2,11 @@ import avance1.Main;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.imageio.stream.ImageInputStream;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Scanner;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+
 
 class MainTest {
 
